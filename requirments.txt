@@ -1,0 +1,258 @@
+-project name is AIoT Smart (Factory Monitoring Platform)
+-first i create a folder (AIoT_Smart_Factory) and it open in vs code.
+
+-In this system i used 5 main parts
+    1.Backend   -> FastAPI server
+    2.Frontend  -> Website/dashboard
+    3.simulator -> Fake IOT sensor
+    4.ai        -> AI analysis
+    5.datacade  ->Data storage
+----------------------------------------------------------------------
+Working-:
+--------
+1.backend/ it holds FastAPI
+e.g- POST /api/v1/sensor-readings
+Sensor sends data to the backend
+
+2.frontend/ it holds dashboard 
+e.g- Temperature: 65°C
+     Vibration: 0.32
+     Current: 4.5A
+     Status: Normal
+
+3.simulator/now real ESP32 is not available,so it role play like a fake sensor
+e.g- M001
+     Temperature = 65
+     Vibration = 0.32
+     Current = 4.5
+in future i used the ESP that time i replace the stimulator
+
+4.ai/it holds AI/anomaly analysis
+e.g.- Temperature = 85°C
+      Threshold = 70°C
+      Abnormal condition detected
+
+5.database/it saved the sensor readonds, machines, alerts etc.     
+
+-now creats folders inside the (AIoT_Smart_Factory/folder) folders are-:
+  AIoT_Smart_Factory/
+│
+├── backend/
+├── frontend/
+├── simulator/
+├── ai/
+└── database/
+-----------------------------------------------------------------------------------
+step1-:
+-Set up the Backend
+
+We will work inside the backend folder.
+
+1. Open the terminal
+
+In VS Code:
+
+Right-click on backend → Open in Integrated Terminal
+
+You should see something like:
+
+...\AIoT_Smart_Factory\backend>
+2. Create a virtual environment
+
+Run:
+
+python -m venv venv
+What is a virtual environment?
+
+A virtual environment is a separate Python space for this project.
+
+It keeps this project's packages separate from your other Python projects.
+
+Think of it like:
+
+AIoT Smart Factory
+       ↓
+    Backend
+       ↓
+   Virtual Environment
+       ↓
+ Python packages for this project
+3. Activate it
+
+After the first command finishes, run:
+
+venv\Scripts\activate
+
+If it works, you should see:
+
+(venv) ...\AIoT_Smart_Factory\backend>
+
+The (venv) means the virtual environment is active.
+
+For now, do only these two commands:
+python -m venv venv
+
+then:
+
+venv\Scripts\activate
+
+step2-:
+-now install fastAPI
+in terninal run this command-(pip install fastapi uvicorn)
+this install two pakages -:
+1.FastAPI → for create backend/API 
+2.Uvicorn → FastAPI application for run
+after installation complete then write this command-(pip-freeze)
+pip freeze gets the packages installed in your current virtual environment.
+
+step3-:
+-create main.py inside the backend folder
+-write code in the main.py file
+code is :
+       from fastapi import FastAPI
+
+app = FastAPI()
+@app.get("/")
+def home():
+    return {"message": "AIoT Smart Factory Backend is running"}
+
+step4-: Create the Sensor Reading API
+  goal is:
+    IoT Sensor / Simulator
+        ↓
+      POST
+        ↓
+FastAPI Backend
+        ↓
+Receive sensor data
+        ↓
+Return response
+
+step4.1:Create a data model
+ 
+- Need to tell FastAPI:
+
+“A sensor reading must contain these fields.”
+
+For that, i use Pydantic.
+
+Change  main.py to:
+  from fastapi import FastAPI
+from pydantic import BaseModel
+
+code is:
+app = FastAPI()
+
+
+class SensorReading(BaseModel):
+    machine_id: str
+    temperature: float
+    vibration: float
+    current: float
+
+
+@app.get("/")
+def home():
+    return {"message": "AIoT Smart Factory Backend is running"}
+
+
+@app.post("/api/v1/sensor-readings")
+def receive_sensor_reading(data: SensorReading):
+    return {
+        "message": "Sensor reading received",
+        "data": data
+    }
+
+The important new part is:
+
+-class SensorReading(BaseModel):
+
+This defines the expected structure of sensor data.
+
+For example, this is valid:
+{
+    "machine_id": "M001",
+    "temperature": 65,
+    "vibration": 0.32,
+    "current": 4.5
+}
+
+But something like this:
+
+{
+    "machine_id": "M001",
+    "temperature": "hello"
+}
+
+will not be accepted correctly because temperature should be a number.
+
+That's called data validation.
+
+step4.2:
+Run the server
+
+Save main.py:
+
+Ctrl + S
+
+Your Uvicorn server should automatically reload because we used:
+
+uvicorn main:app --reload
+
+Now open:
+
+http://127.0.0.1:8000/docs
+This is important.
+
+FastAPI automatically creates an interactive API documentation page for us.
+
+You should see:
+
+GET  /
+POST /api/v1/sensor-readings
+
+For the POST endpoint, click:
+
+POST → Try it out
+
+and enter:
+
+{
+  "machine_id": "M001",
+  "temperature": 65,
+  "vibration": 0.32,
+  "current": 4.5
+}
+
+Then click Execute.
+
+You should get a response containing:
+
+{
+  "message": "Sensor reading received",
+  "data": {
+    "machine_id": "M001",
+    "temperature": 65,
+    "vibration": 0.32,
+    "current": 4.5
+  }
+}
+Sensor data
+     ↓
+JSON
+     ↓
+POST request
+     ↓
+FastAPI
+     ↓
+Pydantic validation
+     ↓
+Response
+
+requests Python ki library hai jo HTTP requests send kar sakti hai.
+
+-milestone: Database
+
+for running the first main.py-command is (uvicorn backend.main:app --reload)
+after running main.py running sensor_simulator.py-comman is(python simulator/sensor_simulator.py)
+ml runn command-(python -m ai.anomaly_detection)

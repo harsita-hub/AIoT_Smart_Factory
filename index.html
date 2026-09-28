@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AIoT Smart Factory Monitoring Platform</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- ================= SIDEBAR ================= -->
+
+        <aside class="sidebar">
+
+            <div class="brand">
+
+                <div class="brand-icon">
+                    🏭
+                </div>
+
+                <div class="brand-text">
+
+                    <strong>
+                        AIoT Smart Factory
+                    </strong>
+
+                    <span>
+                        Monitoring Platform
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <nav class="sidebar-nav">
+
+                <button class="nav-item active">
+
+                    <span class="nav-icon">⌂</span>
+
+                    <span>
+                        Dashboard
+                    </span>
+
+                </button>
+
+
+                <button class="nav-item">
+
+                    <span class="nav-icon">⚙</span>
+
+                    <span>
+                        Machines
+                    </span>
+
+                </button>
+
+
+                <button class="nav-item">
+
+                    <span class="nav-icon">◉</span>
+
+                    <span>
+                        Live Monitoring
+                    </span>
+
+                </button>
+
+
+                <button class="nav-item">
+
+                    <span class="nav-icon">♧</span>
+
+                    <span>
+                        Alerts
+                    </span>
+
+                    <span
+                        id="alertBadge"
+                        class="badge"
+                    >
+                        0
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="nav-item"
+                    data-scroll="historyPanel"
+                >
+
+                    <span class="nav-icon">
+                        ◫
+                    </span>
+
+                    <span>
+                        Machine History
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="nav-item"
+                    data-scroll="aiAssistantPanel"
+                >
+
+                    <span class="nav-icon">
+                        ✦
+                    </span>
+
+                    <span>
+                        AI Assistant
+                    </span>
+
+                </button>
+
+
+                <button class="nav-item">
+
+                    <span class="nav-icon">
+                        ▥
+                    </span>
+
+                    <span>
+                        Reports
+                    </span>
+
+                </button>
+
+
+                <button class="nav-item">
+
+                    <span class="nav-icon">
+                        ⚙
+                    </span>
+
+                    <span>
+                        Settings
+                    </span>
+
+                </button>
+
+            </nav>
+
+
+            <div class="system-status">
+
+                <div class="online-row">
+
+                    <span class="online-dot"></span>
+
+                    <span>
+                        System Online
+                    </span>
+
+                </div>
+
+
+                <div class="system-label">
+                    Last Updated
+                </div>
+
+
+                <div id="sidebarLastUpdated">
+                    --
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- ================= MAIN ================= -->
+
+        <main class="main-content">
+
+            <!-- TOPBAR -->
+
+            <header class="topbar">
+
+                <div class="search-box">
+
+                    <span class="search-icon">
+                        ⌕
+                    </span>
+
+                    <input
+                        type="text"
+                        id="machineSearch"
+                        placeholder="Search machines..."
+                    >
+
+                </div>
+
+
+                <div class="topbar-right">
+
+                    <div class="notification">
+
+                        <span class="bell">
+                            ♧
+                        </span>
+
+                        <span
+                            id="topAlertBadge"
+                            class="notification-badge"
+                        >
+                            0
+                        </span>
+
+                    </div>
+
+
+                    <div class="profile">
+
+                        <div class="profile-avatar">
+                            👤
+                        </div>
+
+
+                        <div class="profile-info">
+
+                            <strong>
+                                Admin
+                            </strong>
+
+                            <span>
+                                Administrator
+                            </span>
+
+                        </div>
+
+
+                        <span class="profile-arrow">
+                            ⌄
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- HEADING -->
+
+            <section class="page-heading">
+
+                <h1>
+                    Welcome, Admin
+                </h1>
+
+                <p>
+                    Here's what's happening in your factory today.
+                </p>
+
+            </section>
+
+
+            <!-- SUMMARY -->
+
+            <section class="summary-grid">
+
+                <div class="summary-card">
+
+                    <div class="summary-top">
+
+                        <div class="summary-icon blue">
+                            ▣
+                        </div>
+
+
+                        <div>
+
+                            <div class="summary-label">
+                                Total Machines
+                            </div>
+
+                            <div
+                                id="totalMachines"
+                                class="summary-value"
+                            >
+                                0
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="summary-bottom">
+
+                        <span id="normalCount">
+                            0 Normal
+                        </span>
+
+                        <span id="warningCount">
+                            0 Warning
+                        </span>
+
+                        <span id="criticalCount">
+                            0 Critical
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="summary-top">
+
+                        <div class="summary-icon green">
+                            ♨
+                        </div>
+
+
+                        <div>
+
+                            <div class="summary-label">
+                                Avg. Temperature
+                            </div>
+
+                            <div
+                                id="avgTemperature"
+                                class="summary-value"
+                            >
+                                -- °C
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="summary-note">
+                        Current machine data
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="summary-top">
+
+                        <div class="summary-icon purple">
+                            〽
+                        </div>
+
+
+                        <div>
+
+                            <div class="summary-label">
+                                Avg. Vibration
+                            </div>
+
+                            <div
+                                id="avgVibration"
+                                class="summary-value"
+                            >
+                                --
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="summary-note">
+                        Current machine data
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="summary-top">
+
+                        <div class="summary-icon orange">
+                            ⚡
+                        </div>
+
+
+                        <div>
+
+                            <div class="summary-label">
+                                Avg. Current
+                            </div>
+
+                            <div
+                                id="avgCurrent"
+                                class="summary-value"
+                            >
+                                -- A
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="summary-note">
+                        Current machine data
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- MACHINE + ALERT -->
+
+            <section class="two-column">
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <div class="panel-title">
+
+                            <span class="panel-icon">
+                                ▣
+                            </span>
+
+                            <span>
+                                Machine Overview
+                            </span>
+
+                        </div>
+
+
+                        <button
+                            class="view-all"
+                            data-scroll="historyPanel"
+                        >
+                            View All
+                        </button>
+
+                    </div>
+
+
+                    <div class="table-wrapper">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Machine ID
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                    <th>
+                                        Temperature
+                                    </th>
+
+                                    <th>
+                                        Vibration
+                                    </th>
+
+                                    <th>
+                                        Current
+                                    </th>
+
+                                    <th>
+                                        Last Updated
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="machineTableBody">
+
+                                <tr>
+
+                                    <td
+                                        colspan="6"
+                                        class="empty"
+                                    >
+                                        Loading machine data...
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ALERTS -->
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <div class="panel-title">
+
+                            <span class="panel-icon red-icon">
+                                ▲
+                            </span>
+
+                            <span>
+                                Recent Alerts
+                            </span>
+
+                        </div>
+
+
+                        <button
+                            class="view-all"
+                            data-scroll="historyPanel"
+                        >
+                            View All
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        id="alertsList"
+                        class="alerts-list"
+                    >
+
+                        <div class="empty-alert">
+                            No anomalies detected yet
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- CHARTS -->
+
+            <section class="charts-grid">
+
+                <div class="panel chart-panel">
+
+                    <div class="panel-header">
+
+                        <div class="panel-title">
+
+                            <span class="panel-icon green-icon">
+                                ♨
+                            </span>
+
+                            <span>
+                                Temperature Trend
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <svg
+                        id="temperatureChart"
+                        class="trend-chart"
+                        viewBox="0 0 600 225"
+                        preserveAspectRatio="none"
+                    ></svg>
+
+                </div>
+
+
+                <div class="panel chart-panel">
+
+                    <div class="panel-header">
+
+                        <div class="panel-title">
+
+                            <span class="panel-icon purple-icon">
+                                〽
+                            </span>
+
+                            <span>
+                                Vibration Trend
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <svg
+                        id="vibrationChart"
+                        class="trend-chart"
+                        viewBox="0 0 600 225"
+                        preserveAspectRatio="none"
+                    ></svg>
+
+                </div>
+
+
+                <div class="panel chart-panel">
+
+                    <div class="panel-header">
+
+                        <div class="panel-title">
+
+                            <span class="panel-icon orange-icon">
+                                ⚡
+                            </span>
+
+                            <span>
+                                Current Trend
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <svg
+                        id="currentChart"
+                        class="trend-chart"
+                        viewBox="0 0 600 225"
+                        preserveAspectRatio="none"
+                    ></svg>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= MACHINE HISTORY ================= -->
+
+            <section
+                id="historyPanel"
+                class="panel history-panel"
+            >
+
+                <div class="panel-header">
+
+                    <div class="panel-title">
+
+                        <span class="panel-icon">
+                            ◫
+                        </span>
+
+                        <span>
+                            Machine History & Anomaly Search
+                        </span>
+
+                    </div>
+
+
+                    <span class="history-help">
+                        Historical data
+                    </span>
+
+                </div>
+
+
+                <div class="history-controls">
+
+                    <div class="history-field">
+
+                        <label for="historyMachine">
+                            Machine
+                        </label>
+
+                        <select id="historyMachine">
+
+                            <option value="">
+                                Select machine
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="history-field">
+
+                        <label for="historyDate">
+                            Date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="historyDate"
+                        >
+
+                    </div>
+
+
+                    <div class="history-field">
+
+                        <label for="historyTime">
+                            Specific Time
+                        </label>
+
+                        <input
+                            type="time"
+                            id="historyTime"
+                        >
+
+                        <small>
+                            Optional
+                        </small>
+
+                    </div>
+
+
+                    <div class="history-actions">
+
+                        <button
+                            id="checkHistoryBtn"
+                            class="history-button primary"
+                        >
+                            Check History
+                        </button>
+
+                        <button
+                            id="clearHistoryBtn"
+                            class="history-button secondary"
+                        >
+                            Clear
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="history-result">
+
+                    <div
+                        id="historyStatus"
+                        class="history-status neutral"
+                    >
+                        Select a machine and date to check history.
+                    </div>
+
+
+                    <div class="history-summary-grid">
+
+                        <div class="history-stat">
+
+                            <span>
+                                Total Readings
+                            </span>
+
+                            <strong id="historyTotalReadings">
+                                --
+                            </strong>
+
+                        </div>
+
+
+                        <div class="history-stat">
+
+                            <span>
+                                Anomalies
+                            </span>
+
+                            <strong id="historyAnomalyCount">
+                                --
+                            </strong>
+
+                        </div>
+
+
+                        <div class="history-stat">
+
+                            <span>
+                                Machine
+                            </span>
+
+                            <strong id="historyMachineValue">
+                                --
+                            </strong>
+
+                        </div>
+
+
+                        <div class="history-stat">
+
+                            <span>
+                                Date
+                            </span>
+
+                            <strong id="historyDateValue">
+                                --
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="historyMessage"
+                        class="history-message"
+                    ></div>
+
+
+                    <div class="history-anomaly-section">
+
+                        <div class="history-anomaly-title">
+                            Anomaly Details
+                        </div>
+
+                        <div id="historyAnomalies"></div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= AI ASSISTANT ================= -->
+
+            <section
+                id="aiAssistantPanel"
+                class="panel ai-assistant-panel"
+            >
+
+                <div class="panel-header">
+
+                    <div class="panel-title">
+
+                        <span class="panel-icon">
+                            ✦
+                        </span>
+
+                        <span>
+                            AI Assistant
+                        </span>
+
+                    </div>
+
+
+                    <span class="ai-powered">
+                        Powered by Groq
+                    </span>
+
+                </div>
+
+
+                <div class="ai-assistant-body">
+
+                    <div class="ai-welcome">
+
+                        <div class="ai-avatar">
+                            🤖
+                        </div>
+
+
+                        <div>
+
+                            <strong>
+                                Factory AI Assistant
+                            </strong>
+
+                            <p>
+                                Ask a question and get an AI-generated answer.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="ai-question-box">
+
+                        <textarea
+                            id="aiQuestion"
+                            placeholder="Ask something like: What is AIoT?"
+                            rows="3"
+                        ></textarea>
+
+
+                        <div class="ai-question-footer">
+
+                            <span>
+                                Your question is sent securely through the backend.
+                            </span>
+
+
+                            <button
+                                id="askAiBtn"
+                                class="history-button primary"
+                            >
+                                Ask AI
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="aiAnswer"
+                        class="ai-answer"
+                    >
+
+                        <div class="ai-answer-placeholder">
+                            AI response will appear here.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= BOTTOM ================= -->
+
+            <section class="bottom-grid">
+
+                <!-- AI INSIGHTS -->
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <div class="panel-title">
+
+                            <span class="panel-icon">
+                                ✦
+                            </span>
+
+                            <span>
+                                AI Insights
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="aiInsights"
+                        class="insights"
+                    ></div>
+
+                </div>
+
+
+                <!-- LIVE SENSOR DATA -->
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <div class="panel-title">
+
+                            <span class="panel-icon">
+                                ◉
+                            </span>
+
+                            <span id="liveTitle">
+                                Live Sensor Data
+                            </span>
+
+                        </div>
+
+
+                        <span class="live-indicator">
+
+                            <span></span>
+
+                            Live
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="live-table">
+
+                        <div class="live-row header-row">
+
+                            <span>
+                                Parameter
+                            </span>
+
+                            <span>
+                                Value
+                            </span>
+
+                            <span>
+                                Status
+                            </span>
+
+                        </div>
+
+
+                        <div class="live-row">
+
+                            <span>
+                                Temperature
+                            </span>
+
+                            <strong id="liveTemperature">
+                                --
+                            </strong>
+
+                            <span
+                                id="temperatureStatus"
+                                class="status-pill normal"
+                            >
+                                --
+                            </span>
+
+                        </div>
+
+
+                        <div class="live-row">
+
+                            <span>
+                                Vibration
+                            </span>
+
+                            <strong id="liveVibration">
+                                --
+                            </strong>
+
+                            <span
+                                id="vibrationStatus"
+                                class="status-pill normal"
+                            >
+                                --
+                            </span>
+
+                        </div>
+
+
+                        <div class="live-row">
+
+                            <span>
+                                Current
+                            </span>
+
+                            <strong id="liveCurrent">
+                                --
+                            </strong>
+
+                            <span
+                                id="currentStatus"
+                                class="status-pill normal"
+                            >
+                                --
+                            </span>
+
+                        </div>
+
+
+                        <div class="live-row">
+
+                            <span>
+                                Last Updated
+                            </span>
+
+                            <strong id="liveTimestamp">
+                                --
+                            </strong>
+
+                            <span>
+                                -
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
